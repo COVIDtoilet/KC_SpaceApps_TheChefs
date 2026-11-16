@@ -259,36 +259,4 @@ if not filtered_df.empty:
         p75=("total_cell_frp", lambda x: np.percentile(x, 75) if len(x) > 0 else 0)
     ).reset_index()
 
-    current_year_df = df[df["year"] == df["year"].max()].groupby(["day_of_year", "month_day"])["total_cell_frp"].sum().reset_index()
-    current_year_df["Series"] = f"Current Year ({df['year'].max()})"
-
-    base = alt.Chart(daily_climatology).encode(
-        x=alt.X("day_of_year:Q", title="Day of Year (1 to 365)")
-    )
-
-    ribbon = base.mark_area(opacity=0.3, color="#f39c12").encode(
-        y=alt.Y("p25:Q", title="Total Daily Fire Radiative Power (MW)"),
-        y2="p75:Q"
-    )
-
-    median_line = base.mark_line(strokeDash=[4, 4], color="#d35400", strokeWidth=2).encode(
-        y="median:Q",
-        tooltip=["month_day", "median", "p25", "p75"]
-    )
-
-    current_line = alt.Chart(current_year_df).mark_line(color="#e74c3c", strokeWidth=3).encode(
-        x="day_of_year:Q",
-        y="total_cell_frp:Q",
-        tooltip=["month_day", "total_cell_frp", "Series"]
-    )
-
-    ribbon_plot = (ribbon + median_line + current_line).properties(height=350)
-    st.altair_chart(ribbon_plot, use_container_width=True)
-
-st.markdown("---")
-
-# --- BURNING ACTIVITY CALENDAR HEATMAP ---
-st.subheader("Burning Activity Calendar (Monthly Grid Event Frequency)")
-st.markdown("Accessible color ramps visualize seasonal vegetation fire patterns and multi-year anomalies across California's properly masked land polygon.")
-
-if not filtered_df
+    current_year_
