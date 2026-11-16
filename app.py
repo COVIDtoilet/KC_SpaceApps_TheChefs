@@ -143,7 +143,8 @@ sensor_options = df["sensor"].unique().tolist()
 selected_sensors = st.sidebar.multiselect(
     "Select Sensors to Include", 
     options=sensor_options, 
-    default=sensor_options
+    default=sensor_options,
+    key="main_sensor_filter"
 )
 
 min_date = df["acq_date"].min().date()
@@ -152,17 +153,19 @@ date_range = st.sidebar.date_input(
     "Date Range", 
     value=(min_date, max_date),
     min_value=min_date,
-    max_value=max_date
+    max_value=max_date,
+    key="main_date_filter"
 )
 
 st.sidebar.markdown("---")
 st.sidebar.header("Z-Score Inspector Controls")
 available_years = sorted(df["year"].unique(), reverse=True)
-selected_z_year = st.sidebar.selectbox("Select Year for Z-Score Analysis", options=available_years, index=0)
+selected_z_year = st.sidebar.selectbox("Select Year for Z-Score Analysis", options=available_years, index=0, key="z_year_select")
 
 z_score_df = calculate_weekly_zscores(df, selected_z_year)
-selected_z_week = st.sidebar.selectbox("Select Week of Year", options=z_score_df["week_of_year"].tolist(), index=len(z_score_df)-1 if not z_score_df.empty else 0)
+selected_z_week = st.sidebar.selectbox("Select Week of Year", options=z_score_df["week_of_year"].tolist(), index=len(z_score_df)-1 if not z_score_df.empty else 0, key="z_week_select")
 
+# Filtered dataset strictly for map and main metrics based on main sidebar controls
 filtered_df = df[
     (df["sensor"].isin(selected_sensors)) & 
     (df["acq_date"].dt.date >= date_range[0]) & 
